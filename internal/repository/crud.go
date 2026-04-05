@@ -24,7 +24,7 @@ func MakeUser(ctx context.Context, client *ent.Client, counter chan struct{}, u 
 }
 
 
-func SelectUser(ctx context.Context, client *ent.Client, ID string, counter chan struct{}, selected chan <- *ent.User, b *bot.Bot, wg *sync.WaitGroup) {
+func SelectUser(ctx context.Context, client *ent.Client, ID string, counter chan struct{}, b *bot.Bot, wg *sync.WaitGroup) *ent.User {
 	defer wg.Done()
 	defer func() { <- counter }()
 	user, err := client.User.Query().Where(user.TgIDEQ(ID)).WithPosts().First(ctx)
@@ -32,7 +32,7 @@ func SelectUser(ctx context.Context, client *ent.Client, ID string, counter chan
 		log.Fatalf("Ошибка при выборе пользователя: %s", err)
 	}
 	log.Printf("Пользователь найден: %v \n", user)
-	selected <- user
+	return user
 }
 
 
