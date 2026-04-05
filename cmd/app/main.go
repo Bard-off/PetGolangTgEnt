@@ -46,6 +46,7 @@ func main() {
 		log.Printf("Сработала функция получения бота у пользователя: %v", update.Message.Chat.ID)
 		usr := config.User{TgID: fmt.Sprintf("%d", update.Message.Chat.ID), Name: update.Message.Chat.Username}
 		wg.Add(1)
+		counter <- struct{}{}
 		go repository.SelectUser(ctx, client, usr.TgID, counter, selected, b, &wg)
 		b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID: update.Message.Chat.ID,
