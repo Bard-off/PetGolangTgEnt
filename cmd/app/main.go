@@ -21,7 +21,6 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	env_data := config.LoadConfig()
 	counter := make(chan struct{}, 100)
-	selected := make(chan *ent.User, 100)
 	defer cancel()
 	client, err := ent.Open("postgres", env_data.DB_URL)
 	if err != nil {
@@ -47,7 +46,7 @@ func main() {
 		usr := config.User{TgID: fmt.Sprintf("%d", update.Message.Chat.ID), Name: update.Message.Chat.Username}
 		wg.Add(1)
 		counter <- struct{}{}
-		go repository.SelectUser(ctx, client, usr.TgID, counter, selected, b, &wg)
+		go repository.SelectUser(ctx, client, usr.TgID, counter, b, &wg)
 		b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID: update.Message.Chat.ID,
 			Text: fmt.Sprintf("Пользователь: %v", <- selected),
