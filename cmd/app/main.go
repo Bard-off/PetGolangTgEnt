@@ -65,4 +65,5 @@ func main() {
 	b.Start(ctx)
 	wg.Wait()
 	close(counter)
+	close(selected)
 }
