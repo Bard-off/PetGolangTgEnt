@@ -46,10 +46,10 @@ func main() {
 		usr := config.User{TgID: fmt.Sprintf("%d", update.Message.Chat.ID), Name: update.Message.Chat.Username}
 		wg.Add(1)
 		counter <- struct{}{}
-		go repository.SelectUser(ctx, client, usr.TgID, counter, b, &wg)
+		user := repository.SelectUser(ctx, client, usr.TgID, counter, b, &wg)
 		b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID: update.Message.Chat.ID,
-			Text: fmt.Sprintf("Пользователь: %v", <- selected),
+			Text: fmt.Sprintf("Пользователь: %v", user),
 		})
 	}
 	opts := []bot.Option{
